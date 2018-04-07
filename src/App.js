@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PictureCard from "./components/PictureCard";
+import Title from "./components/Title";
 import Wrapper from "./components/Wrapper";
 import pics from "./pics.json";
 import "./App.css";
@@ -8,17 +9,12 @@ class App extends Component {
   // Setting this.state.pics to the pics json array
   state = {
     pics: pics,
-    selectedPics: [],
+    selectedPics: [],  // will be used for selected pics
     score: 0,
     total: 0
   };
 
   handleClick = id => {
-    // Filter this.state.pics for pics with an id not equal to the id being removed
-    // const pics = this.state.pics.filter(pic => pic.id !== id);
-    // let selected = [...this.state.pics]
-    // selected.map(pic => {
-    // if (pic.id === id && pic.selected) {
     if (this.state.selectedPics.includes(id)) {
       // game over
       console.log("Game Over")
@@ -27,16 +23,13 @@ class App extends Component {
         score: 0,
         total: (this.state.score > this.state.total) ? this.state.score : this.state.total,
       })
-      // } else if (pic.id === id && !pic.selected) {
     } else {
-      // pic.selected = true;
       // add to score
       this.setState({
         selectedPics: [...this.state.selectedPics, id],
         score: this.state.score + 1
       }, () => console.log(`Score: ${this.state.score} Total: ${this.state.total}`))
     }
-    // })
     // shuffle the pics win or lose
     this.shuffleArray(pics)
   };
@@ -68,6 +61,9 @@ class App extends Component {
   render() {
     return (
       <Wrapper>
+        <Title />
+        <p>Current Score: {this.state.score}</p>
+        <p>Highest Score: {this.state.total}</p>
         {this.state.pics.map(pic => (
           <PictureCard
             handleClick={this.handleClick}

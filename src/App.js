@@ -10,6 +10,7 @@ class App extends Component {
   state = {
     pics: pics,
     selectedPics: [],  // will be used for selected pics
+    message: "",
     score: 0,
     total: 0
   };
@@ -20,13 +21,24 @@ class App extends Component {
       console.log("Game Over")
       this.setState({
         selectedPics: [],
+        message: "That image was already selected once. Start over.",
         score: 0,
         total: (this.state.score > this.state.total) ? this.state.score : this.state.total,
       })
-    } else {
+    // only goes through one set of 12 - needs a % test
+    } else if (this.state.score === 11) { 
+        // found all
+        this.setState({
+          selectedPics: [],
+          message: "Awesome! You've selected all images once. Keep going!!!",
+          score: this.state.score + 1,
+          total: (this.state.score + 1 > this.state.total) ? this.state.score + 1 : this.state.total,
+        })      
+      } else {
       // add to score
       this.setState({
         selectedPics: [...this.state.selectedPics, id],
+        message: "Great! That's a new image. Next...",
         score: this.state.score + 1
       }, () => console.log(`Score: ${this.state.score} Total: ${this.state.total}`))
     }
@@ -62,8 +74,12 @@ class App extends Component {
     return (
       <Wrapper>
         <Title />
-        <p>Current Score: {this.state.score}</p>
-        <p>Highest Score: {this.state.total}</p>
+        <div class="score">
+          <h3>Current Score: {this.state.score}  Highest Score: {this.state.total}</h3>
+        </div>
+        <div class="message">
+          <h4>{this.state.message}</h4>
+        </div> 
         {this.state.pics.map(pic => (
           <PictureCard
             handleClick={this.handleClick}
